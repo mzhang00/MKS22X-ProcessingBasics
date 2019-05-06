@@ -10,14 +10,17 @@ class Visualizer {
   float x, y;
   float [] values;
   float [] speeds;
-  Visualizer(float x, float y, int len) {
+  float heightt, widthh;
+  Visualizer(float x, float y, int len, float heightt, float widthh) {
     this.x = x;
     this.y = y;
+    this.heightt = heightt;
+    this.widthh = widthh;
     values = new float[len];
     speeds = new float[len];
     for (int i = 0; i < values.length; i++) {
-      values[i] = random(-99, 99);
-      speeds[i] = random(2);
+      values[i] = random(-1 * ((heightt/2) - 1), ((heightt/2) - 1));
+      speeds[i] = random(heightt / 100);
     }
   }
 
@@ -26,14 +29,14 @@ class Visualizer {
     //You can assume 10, but it would be even better 
     //if you could modify it to be larger increments.
     fill(255);
-    rect(x, y, 400, 200);
+    rect(x, y, widthh, heightt);
     //This is a 200x400 box.
     //The width of the visualizer is 400! This rect is the border
 
     //the line is the 0 y-value, the top is 100, the bottom is -100
-    line(x, y+100, x+400, y+100);
+    line(x, y+(heightt/2), x+widthh, y+(heightt/2));
 
-    float rectWidth = 400 / values.length;
+    float rectWidth = widthh / values.length;
 
     //You need to use a loop. You need to make the HEIGHT of the bars 
     //the values in the array.
@@ -44,12 +47,16 @@ class Visualizer {
     //THESE ARE WRONG: They just illustrate how they could look
 
     for (int i = 0; i < values.length; i++) {
-      if (values[i] < 0) {
+      if (values[i] < (-1 * (heightt / 4))) {
         fill(255, 0, 0);
+      } else if (values[i] < 0) {
+        fill(255, 165, 0);
+      } else if (values[i] < (heightt / 4)) {
+        fill(255, 255, 0);
       } else {
         fill(0, 255, 0);
       }
-      rect(x + (rectWidth * i), y+100, rectWidth, values[i]);
+      rect(x + (rectWidth * i), y+ (heightt / 2), rectWidth, -1 * values[i]);
     }
 
     //Width of the visualizer is 400!
@@ -58,23 +65,23 @@ class Visualizer {
     //???WRITE THIS METHOD!!!
     for (int i = 0; i < values.length; i++) {
       values[i] += speeds[i];
-      if (values[i] >= 99 || values[i] <= -99) {
+      if (values[i] >= ((heightt/2) - 1) || values[i] <= -1 * ((heightt/2) - 1)) {
         speeds[i] *= -1;
       }
 
-        //??? keep them values between max/min value
+      //??? keep them values between max/min value
 
-        //??? reverse the speeds so they oscillate up/down when they reach max/min
-      }
+      //??? reverse the speeds so they oscillate up/down when they reach max/min
     }
   }
+}
 
-  void setup() {
-    size(600, 500);
-    v = new Visualizer(20, 20, 40);
-  }
-  void draw() {
-    background(255);
-    v.display();
-    v.update();
-  }
+void setup() {
+  size(600, 500);
+  v = new Visualizer(20, 20, 40, 400, 500);
+}
+void draw() {
+  background(255);
+  v.display();
+  v.update();
+}
